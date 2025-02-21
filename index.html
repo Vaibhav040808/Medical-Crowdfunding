@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medical Fundraising & Crowdfunding</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Login Section -->
+  <section id="login" class="login-screen">
+    <h2>Register & Login Now</h2>
+    <form id="loginForm" action="#" method="POST" onsubmit="return validateLogin()">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" required />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required />
+      <div id="login-error" class="error-message"></div>
+      <button type="submit" class="donate-btn">Submit Now</button>
+    </form>
+  </section>
+
+  <!-- Main Content (hidden until login) -->
+  <div id="main-content" class="hidden">
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <h1>Crowd Healthcare</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#campaigns">Campaigns</a></li>
+          <li><a href="#donate">Donate</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero">
+      <h2>Support People in Need of Medical Assistance</h2>
+      <p>Join us in making a difference through crowdfunding for medical expenses.</p>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+      <div class="about-container">
+        <h2>About Us</h2>
+        <p>
+          We are a non-profit organization dedicated to helping individuals raise funds for urgent medical treatments and surgeries.
+          Your generous donations save lives and provide essential financial relief.
+        </p>
+      </div>
+    </section>
+
+    <!-- Campaigns Section -->
+    <section id="campaigns">
+      <div class="campaign">
+        <img src="johns-heart-surgery.jpeg" alt="Mohan's Heart Surgery" class="campaign-image" />
+        <h3>Mohan's Heart Surgery Fund</h3>
+        <p>
+          Mohan, a 45-year-old father of two, has been diagnosed with a serious heart condition that requires urgent surgery.
+          Due to financial constraints, his family is reaching out for help. Every contribution goes toward the surgery, post-operative care, and medication.
+        </p>
+        <p><strong>Patient Details:</strong></p>
+        <ul>
+          <li><strong>Age:</strong> 45 years</li>
+          <li><strong>Family:</strong> Married with two children</li>
+          <li><strong>Condition:</strong> Severe heart condition needing immediate surgery</li>
+          <li><strong>Required Surgery:</strong> Heart bypass surgery</li>
+          <li><strong>Current Treatment:</strong> Medication and regular doctor visits</li>
+        </ul>
+        <p><strong>Goal: ₹7,50,000</strong></p>
+        <div class="donate-box">
+          <a href="#donate" class="donate-btn">Donate Now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Donate Section -->
+    <section id="donate">
+      <h2>Donate</h2>
+      <form id="donationForm" onsubmit="submitDonation(event)">
+        <label for="amount">Donation Amount (₹):</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter amount in INR" required />
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required />
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+        <button type="submit" class="donate-btn">Submit Donation</button>
+      </form>
+      <div id="donationImage" class="hidden">
+        <img src="thank-you-image.jpg" alt="Thank You" />
+      </div>
+      <!-- Donation Total Display -->
+      <div id="donationTotal" style="margin-top: 20px;">
+        <h3>Total Funds Raised: ₹0</h3>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+      <div class="contact-info">
+        <h2>Contact Us</h2>
+        <p>
+          For questions or suggestions, please reach out. We're here to help!
+        </p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:support@healthcarehelp.org">support@healthcarehelp.org</a></li>
+          <li><strong>Phone:</strong> +91 123 456 7890</li>
+          <li><strong>Address:</strong> 123 HealthCare Street, Pune, India</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Retrieve the saved donation total from localStorage or default to 0
+    let totalDonations = parseFloat(localStorage.getItem("totalDonations")) || 0;
+
+    // Function to update the displayed donation total
+    function updateDonationDisplay() {
+      document.getElementById("donationTotal").innerHTML = `<h3>Total Funds Raised: ₹${totalDonations.toLocaleString()}</h3>`;
+    }
+
+    // Run display update on page load
+    updateDonationDisplay();
+
+    // Validate login input and show main content if valid
+    function validateLogin() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const errorMessage = document.getElementById("login-error");
+      const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+      errorMessage.textContent = "";
+      errorMessage.style.display = "none";
+
+      if (!username || !password) {
+        errorMessage.textContent = "Please enter both username and password.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+      if (!specialCharRegex.test(password)) {
+        errorMessage.textContent = "Password must contain at least one special character.";
+        errorMessage.style.display = "block";
+        return false;
+      }
+      
+      // Show main content and hide login
+      document.getElementById("login").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+      return false; // Prevent actual form submission for demo purposes
+    }
+
+    // Handle donation submission, update total funds, and show thank you image
+    function submitDonation(event) {
+      event.preventDefault();
+      const amountInput = document.getElementById("amount");
+      const amount = parseFloat(amountInput.value);
+      if (amount <= 0 || isNaN(amount)) {
+        alert("Please enter a valid donation amount.");
+        return;
+      }
+
+      // Update total donation amount and save to localStorage
+      totalDonations += amount;
+      localStorage.setItem("totalDonations", totalDonations);
+      updateDonationDisplay();
+
+      // Hide donation form and show thank you image
+      document.getElementById("donationForm").style.display = "none";
+      document.getElementById("donationImage").style.display = "block";
+
+      // Optionally, reset the donation form after a delay or user action
+      setTimeout(() => {
+        document.getElementById("donationForm").reset();
+        document.getElementById("donationForm").style.display = "block";
+        document.getElementById("donationImage").style.display = "none";
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
